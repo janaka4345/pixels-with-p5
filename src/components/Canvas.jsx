@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { ReactP5Wrapper } from "@p5-wrapper/react";
-
+let img;
+let graphic;
+let cw = 400;
+let ch = 400;
+let cellSize = 20;
+let rows = cw / cellSize;
+let cols = ch / cellSize;
+let cells = [];
 export default function Canvas(props) {
   return (
     <div>
@@ -15,29 +22,44 @@ export default function Canvas(props) {
 }
 
 function sketch(p5) {
-  // p5.preload = preload(p5);
+  p5.preload = preload(p5);
   p5.setup = setup(p5);
   p5.draw = draw(p5);
   p5.mousePressed = () => mousePressed(p5);
 }
 function setup(p5) {
   return () => {
-    p5.createCanvas(400, 400);
+    p5.createCanvas(cw, ch, { willReadFrequently: true });
+    graphic = p5.createGraphics(200, 200);
+    p5.background(0);
+    graphic.image(img, 0, 0);
+    graphic.loadPixels();
   };
+}
+function preload(p5) {
+  img = p5.loadImage("./face.jpg");
 }
 function draw(p5) {
-  let xoff = 0;
-  let yoff = 1000;
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      cells.push({
+        x: x * cellSize,
+        y: y * cellSize,
+        size: cellSize,
+        color: Math.random() * 255,
+      });
+    }
+  }
   return () => {
-    // console.log(p5.deltaTime);
-    // p5.frameRate(60);
-    const x = p5.map(p5.noise(xoff), 0, 1, 0, 400);
-    const y = p5.map(p5.noise(yoff), 0, 1, 0, 400);
-    // console.log(p5.noise(p5.frameCount));
-    p5.background(250, 120, 0);
-    p5.circle(x, y, 20);
-    xoff += 0.01;
-    yoff += 0.01;
+    cells.forEach((cell) => {
+      p5.push();
+      p5.fill(cell.color);
+      p5.translate(cell.x, cell.y);
+      p5.square(0, 0, cell.size);
+      p5.pop();
+    });
   };
 }
-function mousePressed(p5) {}
+function mousePressed(p5) {
+  console.log(graphic);
+}
