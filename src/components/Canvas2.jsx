@@ -8,7 +8,7 @@ let cellSize = 20;
 let rows = cw / cellSize;
 let cols = ch / cellSize;
 let cells = [];
-export default function Canvas(props) {
+export default function Canvas2(props) {
   return (
     <div>
       <div
