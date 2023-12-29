@@ -30,8 +30,6 @@ function setup(p5) {
   return () => {
     p5.createCanvas(cw, ch, { willReadFrequently: true });
 
-    graphic.image(img, 0, 0);
-    graphic.loadPixels();
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         cells.push({
