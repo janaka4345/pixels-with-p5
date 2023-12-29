@@ -31,7 +31,7 @@ function setup(p5) {
   return () => {
     p5.createCanvas(cw, ch, { willReadFrequently: true });
     graphic = p5.createGraphics(200, 200);
-    p5.background(0);
+
     graphic.image(img, 0, 0);
     graphic.loadPixels();
     for (let y = 0; y < rows; y++) {
@@ -39,8 +39,10 @@ function setup(p5) {
         cells.push({
           x: x * cellSize,
           y: y * cellSize,
-          size: cellSize,
-          color: Math.random() * 255,
+          positionX: x * cellSize,
+          positionY: y * cellSize,
+          speedX: Math.random() * 2,
+          speedY: Math.random() * 2,
         });
       }
     }
@@ -51,34 +53,15 @@ function preload(p5) {
 }
 function draw(p5) {
   return () => {
-    for (let i = 100; i < 300; i++) {
-      const x = Math.floor(cells[i].x / cellSize);
-      const y = Math.floor(cells[i].y / cellSize);
-      p5.push();
-      p5.image(
-        img,
-        cells[i].x,
-        cells[i].y,
-        cellSize,
-        cellSize,
-        x * cellSize,
-        y * cols,
-        cellSize,
-        cellSize
-      );
-      p5.pop();
-    }
-
-    // cells.forEach((cell, i) => {
-    //   const x = Math.floor(cell.x / cellSize);
-    //   const y = Math.floor(cell.y / cellSize);
+    p5.background(255, 0, 0);
+    // for (let i = 25; i < 27; i++) {
+    //   const x = Math.floor(cells[i].x / cellSize);
+    //   const y = Math.floor(cells[i].y / cellSize);
     //   p5.push();
-    //   // p5.fill(cell.color);
-    //   // p5.translate(cell.x, cell.y);
     //   p5.image(
     //     img,
-    //     cell.x,
-    //     cell.y,
+    //     Math.random() * cw,
+    //     Math.random() * cw,
     //     cellSize,
     //     cellSize,
     //     x * cellSize,
@@ -86,15 +69,38 @@ function draw(p5) {
     //     cellSize,
     //     cellSize
     //   );
-
-    //   // p5.Fill(0, 0, 0, 0.5);
-    //   // p5.strokeWeight(5);
-    //   // p5.stroke(255);
-    //   // p5.square(cell.x, cell.y, cellSize);
     //   p5.pop();
-    // });
+    // }
+
+    cells.forEach((cell, i) => {
+      const x = Math.floor(cell.x / cellSize);
+      const y = Math.floor(cell.y / cellSize);
+      p5.push();
+      // p5.fill(cell.color);
+      // p5.translate(cell.x, cell.y);
+      p5.image(
+        img,
+        cell.positionX,
+        cell.positionY,
+        cellSize,
+        cellSize,
+        x * cellSize,
+        y * cols,
+        cellSize,
+        cellSize
+      );
+      cell.positionX += cell.speedX;
+      cell.positionY += cell.speedY;
+
+      //   // p5.Fill(0, 0, 0, 0.5);
+      //   // p5.strokeWeight(5);
+      //   // p5.stroke(255);
+      //   // p5.square(cell.x, cell.y, cellSize);
+      //   p5.pop();
+    });
+    // p5.noLoop();
   };
 }
 function mousePressed(p5) {
-  console.log(graphic);
+  console.log(p5.frameRate());
 }
